@@ -1,0 +1,9 @@
+dropout_rate: 0.3
+drug_embedding_dim: 768
+drug_model_name: dmis-lab/biobert-base-cased-v1.1
+fusion_hidden_dim: 512
+genetic_embedding_dim: 768
+genetic_model_name: dmis-lab/biobert-base-cased-v1.1
+learning_rate: 1e-5
+num_response_classes: 5
+weight_decay: 0.01

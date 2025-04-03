@@ -1,0 +1,28 @@
+# Drug response prediction model configuration
+
+# Data settings
+data_dir: "../data"
+dataset_file: "drug_response_dataset.csv"
+train_ratio: 0.8
+
+# Model settings
+genetic_model_name: "dmis-lab/biobert-base-cased-v1.1"
+drug_model_name: "Downloads/DrugBERT"
+num_response_classes: 5
+genetic_embedding_dim: 768
+drug_embedding_dim: 768
+fusion_hidden_dim: 512
+
+# Training settings
+batch_size: 32
+learning_rate: 1e-5
+weight_decay: 0.01
+dropout_rate: 0.2
+max_epochs: 50
+patience: 10
+log_every_n_steps: 50
+seed: 42
+num_workers: 4
+
+# Output settings
+output_dir: "../models" 

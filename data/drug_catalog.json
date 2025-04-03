@@ -1,0 +1,32 @@
+[
+  {
+    "drug_id": "D001",
+    "drug_name": "Warfarin",
+    "description": "An anticoagulant medication used to prevent blood clots and embolism in conditions such as atrial fibrillation.",
+    "molecular_formula": "C19H16O4",
+    "target_genes": ["CYP2C9", "VKORC1"],
+    "mechanism": "Inhibits vitamin K epoxide reductase, preventing the activation of vitamin K-dependent clotting factors.",
+    "input_ids": [101, 2275, 8674, 1356, 2083, 102],
+    "attention_mask": [1, 1, 1, 1, 1, 1]
+  },
+  {
+    "drug_id": "D002",
+    "drug_name": "Clopidogrel",
+    "description": "An antiplatelet medication used to reduce the risk of heart disease and stroke in those at high risk.",
+    "molecular_formula": "C16H16ClNO2S",
+    "target_genes": ["CYP2C19"],
+    "mechanism": "Inhibits the P2Y12 component of ADP receptors on the platelet surface, which prevents activation of the GPIIb/IIIa receptor complex.",
+    "input_ids": [101, 4352, 8967, 5472, 3098, 102],
+    "attention_mask": [1, 1, 1, 1, 1, 1]
+  },
+  {
+    "drug_id": "D003",
+    "drug_name": "Simvastatin",
+    "description": "A statin medication used to lower blood cholesterol and reduce the risk of cardiovascular disease.",
+    "molecular_formula": "C25H38O5",
+    "target_genes": ["SLCO1B1"],
+    "mechanism": "Inhibits HMG-CoA reductase, a liver enzyme involved in cholesterol production.",
+    "input_ids": [101, 5674, 9856, 2345, 7651, 102],
+    "attention_mask": [1, 1, 1, 1, 1, 1]
+  }
+] 

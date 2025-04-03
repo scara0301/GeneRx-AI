@@ -1,0 +1,10 @@
+{
+  "drug_id": "D001",
+  "drug_name": "warfarin",
+  "description": "Anticoagulant used to prevent blood clots",
+  "molecular_formula": "C19H16O4",
+  "target_genes": ["VKORC1", "CYP2C9"],
+  "mechanism": "Vitamin K antagonist",
+  "input_ids": [101, 2275, 8674, 1356, 2083, 102],
+  "attention_mask": [1, 1, 1, 1, 1, 1]
+} 

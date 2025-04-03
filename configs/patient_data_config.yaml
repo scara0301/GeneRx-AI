@@ -1,0 +1,28 @@
+# Training configuration for drug response prediction model using patient_data.csv
+
+# Data settings
+data_dir: "D:/nt diddy/personalized_drug_ai/data"  # Absolute path
+dataset_file: "processed/patient_data.csv"
+train_ratio: 0.8
+
+# Model settings
+genetic_model_name: "dmis-lab/biobert-base-cased-v1.1"
+drug_model_name: "dmis-lab/biobert-base-cased-v1.1"  # Using BioBERT for drugs too as fallback
+num_response_classes: 5
+genetic_embedding_dim: 768
+drug_embedding_dim: 768
+fusion_hidden_dim: 512
+
+# Training settings
+seed: 42
+batch_size: 16  # Smaller batch size for better generalization
+num_workers: 4
+max_epochs: 15
+learning_rate: 1e-5
+weight_decay: 0.01
+dropout_rate: 0.3  # Higher dropout for better regularization
+patience: 5
+log_every_n_steps: 10
+
+# Output settings
+output_dir: "personalized_drug_ai/results/patient_model" 
