@@ -181,7 +181,7 @@ python simulate_drug.py
 
 ## Dependencies
 
-- Python 3.8+
+- Python 3.13+
 - PyTorch & PyTorch Lightning
 - pandas
 - scikit-learn
