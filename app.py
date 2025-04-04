@@ -28,15 +28,42 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Add minimal custom CSS that complements our theme
+# Add custom CSS with theme styling
 st.markdown("""
 <style>
+    /* Theme colors */
+    :root {
+        --background-color: #e4d5d5;
+        --primary-color: #d33682;
+        --secondary-background: #f8e7e7;
+        --text-color: #262730;
+    }
+    
+    /* Apply theme colors */
+    .main {
+        background-color: var(--background-color);
+    }
+    .stApp {
+        background-color: var(--background-color);
+    }
+    .sidebar .sidebar-content {
+        background-color: var(--secondary-background);
+    }
     .stButton button {
+        background-color: var(--primary-color);
+        color: white;
         border-radius: 4px;
         padding: 0.5rem 1rem;
     }
+    .stTextInput > div > div > input {
+        border-color: var(--primary-color);
+    }
+    .stSelectbox > div > div > div {
+        border-color: var(--primary-color);
+    }
     .info-box {
-        border-left: 5px solid #d33682;
+        background-color: var(--secondary-background);
+        border-left: 5px solid var(--primary-color);
         padding: 1rem;
         border-radius: 0.25rem;
     }
