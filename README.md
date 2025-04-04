@@ -42,7 +42,11 @@ personalized_drug_ai/
    ```
    pip install -r requirements.txt
    ```
-
+###important
+   matplotlib has to be reinstalled it is a bug with python
+   ```
+   pip install matplotlib
+   ```
 ## Usage
 
 ### Running the Web Interface
