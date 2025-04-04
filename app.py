@@ -28,28 +28,15 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Add custom CSS for clean, minimalistic UI
+# Add minimal custom CSS that complements our theme
 st.markdown("""
 <style>
-    .main {
-        background-color: #f5f7f9;
-    }
-    .stApp {
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    h1, h2, h3 {
-        color: #1E3A8A;
-    }
     .stButton button {
-        background-color: #1E3A8A;
-        color: white;
         border-radius: 4px;
         padding: 0.5rem 1rem;
     }
     .info-box {
-        background-color: #EFF6FF;
-        border-left: 5px solid #1E3A8A;
+        border-left: 5px solid #d33682;
         padding: 1rem;
         border-radius: 0.25rem;
     }
