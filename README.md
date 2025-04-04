@@ -42,11 +42,25 @@ personalized_drug_ai/
    ```
    pip install -r requirements.txt
    ```
-###important
-   matplotlib has to be reinstalled it is a bug with python
+
+### GPU Support (Optional)
+
+For GPU acceleration, you'll need:
+
+1. NVIDIA GPU with CUDA support
+2. CUDA Toolkit 11.8 or 12.x
+   - Download from: https://developer.nvidia.com/cuda-downloads
+3. Install PyTorch with CUDA support:
    ```
-   pip install matplotlib
+   # For CUDA 11.8
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   
+   # For CUDA 12.1
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
    ```
+
+**Note**: PyTorch with CUDA support for Python 3.13 may not be available yet. If using Python 3.13, you may need to use CPU mode or downgrade to Python 3.10-3.12.
+
 ## Usage
 
 ### Running the Web Interface
@@ -181,19 +195,97 @@ mkdir -p results/simulation
 python simulate_drug.py
 ```
 
+## Optimizing Model Checkpoints
 
+To reduce the size of model checkpoints:
+
+1. Save weights only (omit optimizer state):
+   ```python
+   checkpoint_callback = ModelCheckpoint(
+       save_weights_only=True  # Reduces size by ~30-50%
+   )
+   ```
+
+2. Save fewer checkpoints:
+   ```python
+   checkpoint_callback = ModelCheckpoint(
+       save_top_k=1,  # Save only the best model
+       every_n_epochs=3  # Save less frequently
+   )
+   ```
+
+## Adding to GitHub
+
+To add this project to GitHub:
+
+1. Create a new repository on GitHub (don't initialize it with README, license, or .gitignore)
+
+2. Initialize Git in your project folder:
+   ```bash
+   cd personalized_drug_ai
+   git init
+   ```
+
+3. Create a .gitignore file to exclude certain files:
+   ```bash
+   echo "# Python files
+   __pycache__/
+   *.py[cod]
+   *$py.class
+   .env
+   .venv
+   env/
+   venv/
+   ENV/
+   
+   # Large files
+   *.h5
+   *.pkl
+   models/*.pt
+   *.ckpt
+   
+   # IDE files
+   .idea/
+   .vscode/" > .gitignore
+   ```
+
+4. Add your files and make the initial commit:
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   ```
+
+5. Link to your GitHub repository and push:
+   ```bash
+   git remote add origin https://github.com/yourusername/personalized_drug_ai.git
+   git push -u origin main
+   ```
+
+6. For large files (like trained models), consider using Git LFS:
+   ```bash
+   # Install Git LFS
+   git lfs install
+   
+   # Track large files
+   git lfs track "*.h5" "*.pkl" "models/*.pt" "*.ckpt"
+   git add .gitattributes
+   git commit -m "Configure Git LFS"
+   git push
+   ```
 
 ## Dependencies
 
-- Python 3.13+
-- PyTorch & PyTorch Lightning
-- pandas
+- Python 3.8+ (Python 3.10-3.12 recommended for CUDA support)
+- PyTorch 2.1.0+ (CPU or CUDA version)
+- PyTorch Lightning 2.5.1+
+- CUDA Toolkit 11.8+ (for GPU acceleration)
+- pandas & numpy
 - scikit-learn
-- matplotlib
-- seaborn
+- matplotlib & seaborn
 - streamlit
-- numpy
+- transformers (HuggingFace)
+- tokenizers
+- rdkit (for chemical structure processing)
+- tensorboard (for training visualization)
 
-## License
-
-MIT 
+## License 
