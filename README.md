@@ -214,64 +214,7 @@ To reduce the size of model checkpoints:
    )
    ```
 
-## Adding to GitHub
 
-To add this project to GitHub:
-
-1. Create a new repository on GitHub (don't initialize it with README, license, or .gitignore)
-
-2. Initialize Git in your project folder:
-   ```bash
-   cd personalized_drug_ai
-   git init
-   ```
-
-3. Create a .gitignore file to exclude certain files:
-   ```bash
-   echo "# Python files
-   __pycache__/
-   *.py[cod]
-   *$py.class
-   .env
-   .venv
-   env/
-   venv/
-   ENV/
-   
-   # Large files
-   *.h5
-   *.pkl
-   models/*.pt
-   *.ckpt
-   
-   # IDE files
-   .idea/
-   .vscode/" > .gitignore
-   ```
-
-4. Add your files and make the initial commit:
-   ```bash
-   git add .
-   git commit -m "Initial commit"
-   ```
-
-5. Link to your GitHub repository and push:
-   ```bash
-   git remote add origin https://github.com/yourusername/personalized_drug_ai.git
-   git push -u origin main
-   ```
-
-6. For large files (like trained models), consider using Git LFS:
-   ```bash
-   # Install Git LFS
-   git lfs install
-   
-   # Track large files
-   git lfs track "*.h5" "*.pkl" "models/*.pt" "*.ckpt"
-   git add .gitattributes
-   git commit -m "Configure Git LFS"
-   git push
-   ```
 
 ## Dependencies
 
