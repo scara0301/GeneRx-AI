@@ -380,7 +380,5 @@ def main():
     
     # Footer
     st.markdown("---")
-    st.markdown("© 2023 Personalized Drug AI | [Documentation](https://github.com/yourusername/personalized_drug_ai)")
-
 if __name__ == "__main__":
     main() 
