@@ -235,7 +235,7 @@ def save_temp_files(patient_data, drugs_data):
 
 def main():
     # Header
-    st.title("💊 Personalized Drug Response Prediction")
+    st.title("💊 GeneRX AI")
     
     # Description
     st.markdown("""
