@@ -380,6 +380,7 @@ def main():
     
     # Footer
     st.markdown("---")
+    st.markdown("© 2025 GeneRX | [Documentation](https://github.com/scara0301/GeneRx-AI)")
 
 if __name__ == "__main__":
     main() 
