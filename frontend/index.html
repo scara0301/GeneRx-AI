@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeneRx AI — Clinical Drug Assessment</title>
+    <meta name="description"
+        content="AI-powered clinical drug safety assessment using FDA adverse event data and evidence-based rules.">
+    <meta name="theme-color" content="#0a0e17">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='18' width='100' height='100' fill='%236366f1'/><text x='50' y='72' font-size='58' text-anchor='middle' fill='white' font-family='Arial'>Rx</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Top Navigation -->
+    <nav class="topbar">
+        <div class="topbar-brand">
+            <div class="brand-icon" id="brandIcon"></div>
+            <span class="brand-text">GeneRx<span class="brand-accent">AI</span></span>
+        </div>
+        <div class="topbar-center">
+            <div class="mode-toggle" id="modeToggle">
+                <button class="mode-btn active" data-mode="doctor" id="btnDoctor">
+                    <i data-lucide="stethoscope"></i>
+                    <span>Clinician</span>
+                </button>
+                <button class="mode-btn" data-mode="patient" id="btnPatient">
+                    <i data-lucide="user"></i>
+                    <span>Patient</span>
+                </button>
+            </div>
+        </div>
+        <div class="topbar-right">
+            <div class="status-dot" id="apiStatus" title="API Status"></div>
+            <span class="status-text" id="apiStatusText">Connecting...</span>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <main class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">Patient Profile</h2>
+                <button class="btn-icon" id="clearForm" title="Reset form">
+                    <i data-lucide="rotate-ccw"></i>
+                </button>
+            </div>
+
+            <form id="patientForm" autocomplete="off">
+                <!-- Demographics -->
+                <div class="form-section">
+                    <div class="section-label">Demographics</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="patientName">Name</label>
+                            <input type="text" id="patientName" placeholder="Optional" />
+                        </div>
+                    </div>
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="patientAge">Age</label>
+                            <input type="number" id="patientAge" value="50" min="1" max="120" />
+                        </div>
+                        <div class="form-group">
+                            <label for="patientSex">Sex</label>
+                            <select id="patientSex">
+                                <option value="F">Female</option>
+                                <option value="M">Male</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientWeight">Weight (kg)</label>
+                        <input type="number" id="patientWeight" value="70" min="20" max="300" step="0.5" />
+                    </div>
+                </div>
+
+                <!-- Conditions -->
+                <div class="form-section">
+                    <div class="section-label">Active Conditions</div>
+                    <div class="checkbox-grid" id="conditionsGrid">
+                        <label class="check-item"><input type="checkbox" value="Diabetes"><span>Diabetes</span></label>
+                        <label class="check-item"><input type="checkbox"
+                                value="Hypertension"><span>Hypertension</span></label>
+                        <label class="check-item"><input type="checkbox"
+                                value="CKD (Chronic Kidney Disease)"><span>CKD</span></label>
+                        <label class="check-item"><input type="checkbox" value="Heart Failure"><span>Heart
+                                Failure</span></label>
+                        <label class="check-item"><input type="checkbox" value="Atrial Fibrillation"><span>Atrial
+                                Fib</span></label>
+                        <label class="check-item"><input type="checkbox" value="Asthma"><span>Asthma</span></label>
+                        <label class="check-item"><input type="checkbox" value="COPD"><span>COPD</span></label>
+                        <label class="check-item"><input type="checkbox" value="Liver Disease"><span>Liver
+                                Disease</span></label>
+                        <label class="check-item"><input type="checkbox" value="Peptic Ulcer"><span>Peptic
+                                Ulcer</span></label>
+                    </div>
+                </div>
+
+                <!-- Lab Values -->
+                <div class="form-section">
+                    <div class="section-label">Lab Values</div>
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="labEgfr">eGFR <span class="unit">mL/min</span></label>
+                            <input type="number" id="labEgfr" value="90" min="0" max="150" step="1" />
+                        </div>
+                        <div class="form-group">
+                            <label for="labAlt">ALT <span class="unit">U/L</span></label>
+                            <input type="number" id="labAlt" value="25" min="0" max="500" step="1" />
+                        </div>
+                    </div>
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="labHba1c">HbA1c <span class="unit">%</span></label>
+                            <input type="number" id="labHba1c" value="5.5" min="3" max="20" step="0.1" />
+                        </div>
+                        <div class="form-group">
+                            <label for="labSbp">SBP <span class="unit">mmHg</span></label>
+                            <input type="number" id="labSbp" value="120" min="60" max="260" step="1" />
+                        </div>
+                    </div>
+                    <div class="form-row two-col">
+                        <div class="form-group">
+                            <label for="labLdl">LDL <span class="unit">mmol/L</span></label>
+                            <input type="number" id="labLdl" value="3.0" min="0" max="15" step="0.1" />
+                        </div>
+                        <div class="form-group">
+                            <label for="labInr">INR</label>
+                            <input type="number" id="labInr" value="1.0" min="0.5" max="10" step="0.1" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Meds -->
+                <div class="form-section">
+                    <div class="section-label">Current Medications</div>
+                    <div class="checkbox-grid" id="currentMedsGrid"></div>
+                </div>
+
+                <!-- Allergies -->
+                <div class="form-section">
+                    <div class="section-label">Allergies</div>
+                    <div class="checkbox-grid" id="allergiesGrid">
+                        <label class="check-item"><input type="checkbox"
+                                value="penicillin"><span>Penicillin</span></label>
+                        <label class="check-item"><input type="checkbox" value="nsaids"><span>NSAIDs</span></label>
+                        <label class="check-item"><input type="checkbox" value="sulfa drugs"><span>Sulfa</span></label>
+                        <label class="check-item"><input type="checkbox" value="ace inhibitors"><span>ACE
+                                Inhibitors</span></label>
+                        <label class="check-item"><input type="checkbox" value="statins"><span>Statins</span></label>
+                    </div>
+                </div>
+            </form>
+        </aside>
+
+        <!-- Content Area -->
+        <section class="content" id="contentArea">
+            <!-- Drug Selection -->
+            <div class="content-card" id="drugSelectionCard">
+                <div class="card-header">
+                    <h2>Drug Assessment</h2>
+                    <p class="card-subtitle">Select medications to evaluate for this patient</p>
+                </div>
+                <div class="drug-grid" id="drugGrid"></div>
+                <button class="btn-primary" id="runAssessment" disabled>
+                    <i data-lucide="activity"></i>
+                    <span>Run Assessment</span>
+                </button>
+            </div>
+
+            <!-- Results -->
+            <div class="content-card hidden" id="resultsCard">
+                <div class="card-header">
+                    <h2>Assessment Results</h2>
+                    <div class="results-meta" id="resultsMeta"></div>
+                </div>
+
+                <!-- Summary Table -->
+                <div class="results-table-wrap" id="summaryTable"></div>
+
+                <!-- DDI Alerts -->
+                <div class="ddi-section hidden" id="ddiSection">
+                    <div class="ddi-header">
+                        <i data-lucide="alert-triangle"></i>
+                        <span>Drug Interactions Detected</span>
+                    </div>
+                    <div id="ddiList"></div>
+                </div>
+
+                <!-- Detail Cards -->
+                <div id="detailCards"></div>
+
+                <!-- ML Insights -->
+                <div class="ml-section hidden" id="mlSection">
+                    <div class="card-header">
+                        <h3>ML Risk Analysis</h3>
+                        <p class="card-subtitle">Predictions from FDA adverse event model</p>
+                    </div>
+                    <canvas id="mlChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Patient Mode Wizard -->
+            <div class="content-card hidden" id="patientWizard">
+                <div class="wizard-progress" id="wizardProgress"></div>
+                <div id="wizardContent"></div>
+                <div class="wizard-nav" id="wizardNav"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Disclaimer Footer -->
+    <footer class="disclaimer">
+        This tool is for informational and educational purposes only. It does not constitute medical advice.
+        Always consult a qualified healthcare professional before making medication decisions.
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
