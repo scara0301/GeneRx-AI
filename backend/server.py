@@ -160,6 +160,28 @@ def check_interactions(request: InteractionRequest):
     return {"interactions": interactions}
 
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+# Serve the static files from the 'frontend' directory for CSS/JS
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+@app.get("/")
+async def read_index():
+    """Serve the main frontend HTML file."""
+    return FileResponse("frontend/index.html")
+
+@app.get("/{file_name}")
+async def read_file(file_name: str):
+    """Serve specific root files (like style.css or app.js) directly."""
+    import os
+    file_path = f"frontend/{file_name}"
+    if os.path.exists(file_path):
+        return FileResponse(file_path)
+    return FileResponse("frontend/index.html")
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Hugging Face Spaces standard port is 7860
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 7860)))
+
