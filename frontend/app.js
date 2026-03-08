@@ -6,7 +6,7 @@
 // Use Render URL in production (Vercel), or localhost for local development
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8000/api'
-    : 'https://generx-backend.onrender.com/api';
+    : 'https://generx-ai.onrender.com/api';
 let currentMode = 'doctor';
 let selectedDrugs = new Set();
 let drugCatalog = [];
