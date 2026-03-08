@@ -1,3 +1,12 @@
+---
+title: GeneRx AI
+emoji: 💊
+colorFrom: indigo
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
 # GeneRx AI
 
 Clinical drug safety assessment powered by machine learning and FDA adverse event data.
