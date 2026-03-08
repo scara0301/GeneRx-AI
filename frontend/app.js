@@ -3,9 +3,12 @@
  * Vanilla JS SPA with Doctor & Patient modes
  */
 
-// Use relative URL for Hugging Face unified deployment
-const API_BASE = '';
-let currentMode = 'doctor';
+// Hugging Face unified deployment dynamic path detection
+// HF Spaces load in an iframe at paths like /embed/userName/spaceName
+const basePath = window.location.pathname.replace(/\/$/, "");
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'
+    : basePath;
 let selectedDrugs = new Set();
 let drugCatalog = [];
 let patientWizardStep = 1;
