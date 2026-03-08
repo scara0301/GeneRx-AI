@@ -4,7 +4,7 @@
  */
 
 // Use relative URL for Hugging Face unified deployment
-const API_BASE = '/api';
+const API_BASE = '';
 let currentMode = 'doctor';
 let selectedDrugs = new Set();
 let drugCatalog = [];
