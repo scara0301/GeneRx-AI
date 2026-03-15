@@ -1,21 +1,15 @@
-"""
-server.py — FastAPI backend for GeneRx-AI
-Combines ML predictions with clinical rules engine.
-"""
 import os
 import sys
 sys.path.insert(0, os.path.dirname(__file__))
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import List, Optional
 
-from clinical_engine import (
-    DRUG_CATALOG,
-    evaluate_drug,
-    check_drug_interactions,
-)
+from clinical_engine import DRUG_CATALOG, evaluate_drug, check_drug_interactions
 from ml_model import get_predictor
 
 app = FastAPI(
@@ -32,8 +26,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# Pydantic Models
 
 class PatientProfile(BaseModel):
     name: str = "Patient"
@@ -62,8 +54,6 @@ class InteractionRequest(BaseModel):
     drugs: List[str]
 
 
-# Endpoints
-
 @app.get("/api/health")
 def health_check():
     predictor = get_predictor()
@@ -76,24 +66,18 @@ def health_check():
 
 @app.get("/api/drugs")
 def get_drugs():
-    """Return drug catalog with basic info."""
-    drugs = []
-    for name, info in DRUG_CATALOG.items():
-        drugs.append({
-            "name": name,
-            "category": info.get("category", ""),
-            "description": info.get("description", ""),
-        })
+    drugs = [
+        {"name": name, "category": info.get("category", ""), "description": info.get("description", "")}
+        for name, info in DRUG_CATALOG.items()
+    ]
     return {"drugs": drugs}
 
 
 @app.post("/api/assess")
 def assess_drugs(request: AssessmentRequest):
-    """Assess drugs for a patient — combines ML model + clinical rules."""
     patient = request.patient
     predictor = get_predictor()
 
-    # Build patient profile dict for rules engine
     patient_dict = {
         "name": patient.name,
         "patient_id": "API",
@@ -116,10 +100,7 @@ def assess_drugs(request: AssessmentRequest):
 
     results = []
     for drug_name in request.drugs:
-        # Clinical rules assessment
         rule_result = evaluate_drug(patient_dict, drug_name)
-
-        # ML prediction
         ml_result = predictor.predict(
             drug_name=drug_name,
             patient_age=patient.age,
@@ -127,9 +108,7 @@ def assess_drugs(request: AssessmentRequest):
             patient_weight=patient.weight_kg,
             num_concomitant_drugs=len(patient.current_meds),
         )
-
-        # Combine results
-        combined = {
+        results.append({
             "drug_name": drug_name,
             "suitability": rule_result["suitability"],
             "risk_level": rule_result["risk_level"],
@@ -139,13 +118,9 @@ def assess_drugs(request: AssessmentRequest):
             "monitoring": rule_result["monitoring"],
             "side_effects": rule_result["side_effects"],
             "ml_prediction": ml_result,
-        }
-        results.append(combined)
+        })
 
-    # Drug interactions
-    all_drugs = request.drugs + patient.current_meds
-    interactions = check_drug_interactions(all_drugs)
-
+    interactions = check_drug_interactions(request.drugs + patient.current_meds)
     return {
         "patient_name": patient.name,
         "assessments": results,
@@ -155,33 +130,23 @@ def assess_drugs(request: AssessmentRequest):
 
 @app.post("/api/interactions")
 def check_interactions(request: InteractionRequest):
-    """Check drug-drug interactions."""
-    interactions = check_drug_interactions(request.drugs)
-    return {"interactions": interactions}
+    return {"interactions": check_drug_interactions(request.drugs)}
 
 
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-
-# Serve the static files from the 'frontend' directory for CSS/JS
 app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
 @app.get("/")
 async def read_index():
-    """Serve the main frontend HTML file."""
     return FileResponse("frontend/index.html")
 
 @app.get("/{file_name}")
 async def read_file(file_name: str):
-    """Serve specific root files (like style.css or app.js) directly."""
-    import os
     file_path = f"frontend/{file_name}"
     if os.path.exists(file_path):
         return FileResponse(file_path)
     return FileResponse("frontend/index.html")
 
+
 if __name__ == "__main__":
     import uvicorn
-    # Hugging Face Spaces standard port is 7860
     uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 7860)))
-
