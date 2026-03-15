@@ -105,9 +105,9 @@ class DrugRiskPredictor:
                 "score": float(pred_class) / 3.0,  # Normalize to 0-1
                 "category": pred_class,
                 "label": self.risk_labels[pred_class],
-                "confidence": round(confidence, 1),
+                "confidence": round(float(confidence), 1),
                 "probabilities": {
-                    self.risk_labels[i]: round(float(p) * 100, 1)
+                    self.risk_labels[i]: round(float(p) * 100.0, 1)
                     for i, p in enumerate(pred_proba)
                     if i < len(self.risk_labels)
                 },
