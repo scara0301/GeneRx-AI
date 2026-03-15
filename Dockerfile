@@ -20,6 +20,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code
 COPY --chown=user . .
 
+# Train the ML model at build time (no external data/network needed)
+RUN python backend/build_model.py
+
 # Expose the standard Hugging Face port
 EXPOSE 7860
 
