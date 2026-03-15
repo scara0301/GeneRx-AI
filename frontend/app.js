@@ -14,7 +14,7 @@ let drugCatalog = [];
 let patientWizardStep = 1;
 let patientData = {};
 
-// ── Init ──────────────────────────────────────────────────────────────────
+// Init
 
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
@@ -35,7 +35,7 @@ function setupEventListeners() {
     document.getElementById('clearForm').addEventListener('click', resetForm);
 }
 
-// ── API ───────────────────────────────────────────────────────────────────
+// API
 
 async function checkApiStatus() {
     const dot = document.getElementById('apiStatus');
@@ -79,7 +79,7 @@ async function loadDrugCatalog() {
     }
 }
 
-// ── Mode Switching ────────────────────────────────────────────────────────
+// Mode Switching
 
 function switchMode(mode) {
     currentMode = mode;
@@ -106,7 +106,7 @@ function switchMode(mode) {
     }
 }
 
-// ── Drug Grid ─────────────────────────────────────────────────────────────
+// Drug Grid
 
 function renderDrugGrid() {
     const grid = document.getElementById('drugGrid');
@@ -144,7 +144,7 @@ function renderCurrentMedsCheckboxes() {
     `).join('');
 }
 
-// ── Collect Form Data ─────────────────────────────────────────────────────
+// Collect Form Data
 
 function collectPatientProfile() {
     const conditions = [];
@@ -179,7 +179,7 @@ function collectPatientProfile() {
     };
 }
 
-// ── Run Assessment ────────────────────────────────────────────────────────
+// Run Assessment
 
 async function runAssessment() {
     const btn = document.getElementById('runAssessment');
@@ -217,7 +217,7 @@ async function runAssessment() {
     }
 }
 
-// ── Render Results ────────────────────────────────────────────────────────
+// Render Results
 
 function renderResults(data) {
     const card = document.getElementById('resultsCard');
@@ -452,7 +452,7 @@ function renderMLChart(assessments) {
     });
 }
 
-// ── Patient Wizard ────────────────────────────────────────────────────────
+// Patient Wizard
 
 const WIZARD_STEPS = [
     { title: 'About You', subtitle: 'Basic info to personalize your results' },
@@ -695,7 +695,7 @@ function renderPatientResults(data) {
     container.innerHTML = html;
 }
 
-// ── Utils ─────────────────────────────────────────────────────────────────
+// Utils
 
 function resetForm() {
     document.getElementById('patientForm').reset();

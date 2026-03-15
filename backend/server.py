@@ -33,7 +33,7 @@ app.add_middleware(
 )
 
 
-# ── Pydantic Models ──────────────────────────────────────────────────────────
+# Pydantic Models
 
 class PatientProfile(BaseModel):
     name: str = "Patient"
@@ -62,7 +62,7 @@ class InteractionRequest(BaseModel):
     drugs: List[str]
 
 
-# ── Endpoints ────────────────────────────────────────────────────────────────
+# Endpoints
 
 @app.get("/api/health")
 def health_check():

@@ -9,9 +9,7 @@ Drug recommendation and risk assessment based on clinical parameters:
 No genetic data required.
 """
 
-# ─────────────────────────────────────────────────────────────────────────────
 # DRUG CATALOG
-# ─────────────────────────────────────────────────────────────────────────────
 DRUG_CATALOG = {
     "Metformin": {
         "category": "Diabetes",
@@ -153,9 +151,7 @@ DRUG_CATALOG = {
     },
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
 # DRUG-DRUG INTERACTIONS
-# ─────────────────────────────────────────────────────────────────────────────
 DRUG_DRUG_INTERACTIONS = {
     ("Warfarin", "Ibuprofen"): {
         "severity": "CRITICAL",
@@ -191,9 +187,7 @@ DRUG_DRUG_INTERACTIONS = {
     },
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
 # ALLERGY MAP  (allergy category → contraindicated drugs)
-# ─────────────────────────────────────────────────────────────────────────────
 ALLERGY_CONTRAINDICATIONS = {
     "Penicillin": ["Amoxicillin"],
     "NSAIDs": ["Ibuprofen"],
@@ -203,9 +197,7 @@ ALLERGY_CONTRAINDICATIONS = {
     "Beta Blockers": ["Metoprolol"],
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
 # CORE EVALUATION ENGINE
-# ─────────────────────────────────────────────────────────────────────────────
 
 def evaluate_drug(patient: dict, drug_name: str) -> dict:
     """
@@ -244,19 +236,19 @@ def evaluate_drug(patient: dict, drug_name: str) -> dict:
     inr         = patient.get("inr", 1.0)
     allergies   = [a.lower() for a in patient.get("allergies", [])]
 
-    # ── Universal age modifier ────────────────────────────────────────────────
+    # Universal age modifier
     if age >= 65:
         dose_notes.append("Patient ≥65 years: Consider lower starting doses and closer monitoring.")
     if age >= 80:
         warnings.append("Patient ≥80 years: High caution — increased sensitivity to most medications.")
 
-    # ── BMI note ─────────────────────────────────────────────────────────────
+    # BMI note
     if bmi > 30:
         dose_notes.append(f"BMI {bmi:.1f}: Obesity may affect drug distribution — verify weight-based dosing.")
 
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     # Per-drug clinical rules
-    # ─────────────────────────────────────────────────────────────────────────
+    # 
     if drug_name == "Metformin":
         # CKD contraindication
         if egfr < 30:
@@ -413,13 +405,13 @@ def evaluate_drug(patient: dict, drug_name: str) -> dict:
             dose_notes.append("Hepatic impairment: Reduce Omeprazole dose.")
         dose_notes.append("For long-term use (>1 year), monitor Magnesium and Vitamin B12 levels.")
 
-    # ── Allergy check for all drugs ───────────────────────────────────────────
+    # Allergy check for all drugs
     for allergy_cat, contraindicated_drugs in ALLERGY_CONTRAINDICATIONS.items():
         if drug_name in contraindicated_drugs and allergy_cat.lower() in allergies:
             suitability = "Contraindicated"
             reasons.insert(0, f"⚠️ ALLERGY ALERT: Patient has documented {allergy_cat} allergy — {drug_name} is contraindicated.")
 
-    # ── Compute risk level ────────────────────────────────────────────────────
+    # Compute risk level
     risk_level = compute_risk_level(suitability)
 
     return {

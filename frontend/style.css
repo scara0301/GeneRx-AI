@@ -1,6 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════
-   GeneRx AI — Dark Professional Theme
-   ═══════════════════════════════════════════════════════════════ */
+/* GeneRx AI — Dark Professional Theme */
 
 :root {
     --bg-primary: #0a0e17;
@@ -39,7 +37,7 @@
     --blur: blur(16px);
 }
 
-/* ── Reset ─────────────────────────────────────────────────── */
+/* Reset */
 *,
 *::before,
 *::after {
@@ -67,7 +65,7 @@ body {
         var(--bg-primary);
 }
 
-/* ── Scrollbar ─────────────────────────────────────────────── */
+/* Scrollbar */
 ::-webkit-scrollbar {
     width: 5px;
 }
@@ -85,7 +83,7 @@ body {
     background: rgba(255, 255, 255, 0.15);
 }
 
-/* ── Top Navigation ────────────────────────────────────────── */
+/* Top Navigation */
 .topbar {
     display: flex;
     align-items: center;
@@ -215,14 +213,14 @@ body {
     font-weight: 500;
 }
 
-/* ── Main Layout ───────────────────────────────────────────── */
+/* Main Layout */
 .app-layout {
     display: flex;
     flex: 1;
     overflow: hidden;
 }
 
-/* ── Sidebar ───────────────────────────────────────────────── */
+/* Sidebar */
 .sidebar {
     width: 280px;
     min-width: 280px;
@@ -393,7 +391,7 @@ body {
     font-weight: 500;
 }
 
-/* ── Content Area ──────────────────────────────────────────── */
+/* Content Area */
 .content {
     flex: 1;
     overflow-y: auto;
@@ -439,7 +437,7 @@ body {
     display: none !important;
 }
 
-/* ── Drug Grid ─────────────────────────────────────────────── */
+/* Drug Grid */
 .drug-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
@@ -480,7 +478,7 @@ body {
     color: var(--text-muted);
 }
 
-/* ── Primary Button ────────────────────────────────────────── */
+/* Primary Button */
 .btn-primary {
     display: flex;
     align-items: center;
@@ -544,7 +542,7 @@ body {
     }
 }
 
-/* ── Results Table ─────────────────────────────────────────── */
+/* Results Table */
 .results-table-wrap {
     overflow-x: auto;
     margin-bottom: 20px;
@@ -586,7 +584,7 @@ body {
     background: rgba(255, 255, 255, 0.02);
 }
 
-/* ── Risk Badges ───────────────────────────────────────────── */
+/* Risk Badges */
 .risk-badge {
     display: inline-flex;
     align-items: center;
@@ -641,7 +639,7 @@ body {
     background: var(--critical);
 }
 
-/* ── DDI Alerts ────────────────────────────────────────────── */
+/* DDI Alerts */
 .ddi-section {
     margin-bottom: 20px;
 }
@@ -685,7 +683,7 @@ body {
     margin-bottom: 2px;
 }
 
-/* ── Detail Cards ──────────────────────────────────────────── */
+/* Detail Cards */
 .detail-card {
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -793,7 +791,7 @@ body {
     margin: 2px;
 }
 
-/* ── ML Section ────────────────────────────────────────────── */
+/* ML Section */
 .ml-section {
     margin-top: 8px;
 }
@@ -802,7 +800,7 @@ body {
     margin-top: 12px;
 }
 
-/* ── Patient Wizard ────────────────────────────────────────── */
+/* Patient Wizard */
 .wizard-progress {
     display: flex;
     gap: 4px;
@@ -917,7 +915,7 @@ body {
     line-height: 1.6;
 }
 
-/* ── Disclaimer ────────────────────────────────────────────── */
+/* Disclaimer */
 .disclaimer {
     text-align: center;
     padding: 10px 24px;
@@ -929,7 +927,7 @@ body {
     letter-spacing: 0.2px;
 }
 
-/* ── Animations ────────────────────────────────────────────── */
+/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -963,7 +961,7 @@ body {
     }
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
+/* Responsive */
 @media (max-width: 900px) {
     .app-layout {
         flex-direction: column;
