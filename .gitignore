@@ -6,9 +6,9 @@ dist/
 build/
 *.egg
 
-# Data & Models (regenerated via pipeline)
+# Data (regenerated via pipeline — don't commit raw data)
 data/
-models/
+# models/ is intentionally NOT ignored — the trained pkl must be committed for HF Spaces deployment
 
 # Environment
 .env
