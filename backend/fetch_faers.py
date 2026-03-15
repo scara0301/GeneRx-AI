@@ -1,18 +1,11 @@
-"""
-fetch_faers.py — Download FDA Adverse Event Reports via openFDA API
-Fetches real adverse event data for target drugs.
-No API key needed (limited to 240 requests/min without key).
-"""
 import requests
 import pandas as pd
 import time
 import os
-import json
 
 BASE_URL = "https://api.fda.gov/drug/event.json"
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "faers")
 
-# Our target drugs — using generic names that match FAERS records
 TARGET_DRUGS = [
     "metformin",
     "atorvastatin",
@@ -22,17 +15,17 @@ TARGET_DRUGS = [
     "warfarin",
     "amoxicillin",
     "ibuprofen",
-    "acetaminophen",   # paracetamol in FAERS
+    "acetaminophen",
     "omeprazole",
 ]
 
+
 def fetch_drug_events(drug_name, max_records=2000):
-    """Fetch adverse event reports for a single drug from openFDA."""
     all_records = []
-    batch_size = 100  # openFDA max per request
+    batch_size = 100
     skip = 0
 
-    print(f"  Fetching events for {drug_name}...")
+    print(f"  Fetching {drug_name}...")
 
     while skip < max_records:
         params = {
@@ -43,15 +36,14 @@ def fetch_drug_events(drug_name, max_records=2000):
         try:
             resp = requests.get(BASE_URL, params=params, timeout=30)
             if resp.status_code == 404:
-                print(f"    No results found for {drug_name}")
+                print(f"    No results for {drug_name}")
                 break
             if resp.status_code != 200:
                 print(f"    API error {resp.status_code}, retrying...")
                 time.sleep(2)
                 continue
 
-            data = resp.json()
-            results = data.get("results", [])
+            results = resp.json().get("results", [])
             if not results:
                 break
 
@@ -60,25 +52,22 @@ def fetch_drug_events(drug_name, max_records=2000):
                 drugs = patient.get("drug", [])
                 reactions = patient.get("reaction", [])
 
-                # Extract patient demographics
                 age = None
-                age_unit = patient.get("patientonsetageunit")
                 raw_age = patient.get("patientonsetage")
+                age_unit = patient.get("patientonsetageunit")
                 if raw_age:
                     try:
                         age = float(raw_age)
-                        # Convert to years if needed
-                        if age_unit == "802":    # months
-                            age = age / 12
-                        elif age_unit == "803":  # days
-                            age = age / 365
-                        elif age_unit == "800":  # decades
-                            age = age * 10
+                        if age_unit == "802":
+                            age /= 12
+                        elif age_unit == "803":
+                            age /= 365
+                        elif age_unit == "800":
+                            age *= 10
                     except (ValueError, TypeError):
                         age = None
 
-                sex_code = patient.get("patientsex")
-                sex = {"1": "M", "2": "F"}.get(sex_code, "Unknown")
+                sex = {"1": "M", "2": "F"}.get(patient.get("patientsex"), "Unknown")
 
                 weight = None
                 raw_weight = patient.get("patientweight")
@@ -88,18 +77,15 @@ def fetch_drug_events(drug_name, max_records=2000):
                     except (ValueError, TypeError):
                         weight = None
 
-                # Seriousness flags
                 serious = event.get("serious", "0")
                 death = event.get("seriousnessdeath", "0")
                 hospital = event.get("seriousnesshospitalization", "0")
                 disability = event.get("seriousnessdisabling", "0")
                 life_threat = event.get("seriousnesslifethreatening", "0")
 
-                # Extract all reactions for this event
                 reaction_list = [r.get("reactionmeddrapt", "") for r in reactions if r.get("reactionmeddrapt")]
                 reaction_outcomes = [r.get("reactionoutcome", "0") for r in reactions]
 
-                # Find the target drug entry for role/indication
                 drug_role = "Unknown"
                 indication = ""
                 for d in drugs:
@@ -113,7 +99,7 @@ def fetch_drug_events(drug_name, max_records=2000):
                         indication = d.get("drugindication", "")
                         break
 
-                record = {
+                all_records.append({
                     "drug_name": drug_name,
                     "patient_age": age,
                     "patient_sex": sex,
@@ -129,18 +115,16 @@ def fetch_drug_events(drug_name, max_records=2000):
                     "indication": indication,
                     "reaction_outcomes": "|".join(reaction_outcomes),
                     "num_concomitant_drugs": len(drugs) - 1,
-                }
-                all_records.append(record)
+                })
 
             skip += batch_size
-            time.sleep(0.3)  # Rate limiting
+            time.sleep(0.3)
 
         except requests.exceptions.RequestException as e:
             print(f"    Network error: {e}, retrying in 3s...")
             time.sleep(3)
-            continue
 
-    print(f"    Retrieved {len(all_records)} events for {drug_name}")
+    print(f"    {len(all_records)} events retrieved")
     return all_records
 
 
@@ -153,22 +137,17 @@ def main():
     all_events = []
 
     for drug in TARGET_DRUGS:
-        events = fetch_drug_events(drug, max_records=5000)
-        all_events.extend(events)
-        time.sleep(1)  # Pause between drugs
+        all_events.extend(fetch_drug_events(drug, max_records=5000))
+        time.sleep(1)
 
     df = pd.DataFrame(all_events)
     output_path = os.path.join(OUTPUT_DIR, "faers_events.csv")
     df.to_csv(output_path, index=False)
 
-    print(f"\nTotal events collected: {len(df)}")
+    print(f"\nTotal events: {len(df)}")
     print(f"Saved to: {output_path}")
-    print(f"\nDrug distribution:")
-    print(df["drug_name"].value_counts().to_string())
-    print(f"\nSeriousness breakdown:")
-    print(f"  Serious: {df['serious'].sum()}")
-    print(f"  Deaths:  {df['death'].sum()}")
-    print(f"  Hospitalizations: {df['hospitalization'].sum()}")
+    print(f"\nPer drug:\n{df['drug_name'].value_counts().to_string()}")
+    print(f"\nSerious: {df['serious'].sum()}  |  Deaths: {df['death'].sum()}  |  Hospitalizations: {df['hospitalization'].sum()}")
 
     return df
 
