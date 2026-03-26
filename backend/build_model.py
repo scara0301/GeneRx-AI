@@ -58,7 +58,7 @@ def generate_dataset():
         se_mf  = round(np.clip(se_mean + np.random.normal(0, 0.05), 0, 1), 3)
         se_xf  = round(np.clip(se_max  + np.random.normal(0, 0.05), 0, 1), 3)
 
-        # Risk modifiers
+        # Riskmodifiers
         risk = base_risk
         if age > 75:        risk = min(3, risk + 1)
         if n_conc >= 5:     risk = min(3, risk + 1)
