@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, roc_auc_score, f1_score
 from sklearn.ensemble import GradientBoostingClassifier
 import warnings
 warnings.filterwarnings("ignore")
@@ -93,13 +93,19 @@ def train():
 
     # Evaluate
     y_pred = model.predict(X_test)
+    y_proba = model.predict_proba(X_test)
     accuracy = accuracy_score(y_test, y_pred)
 
     risk_labels = ["Low Risk", "Moderate", "High Risk", "Critical"]
     present_labels = sorted(y_test.unique())
     target_names = [risk_labels[i] for i in present_labels]
 
-    print(f"\nFinal Test Accuracy: {accuracy:.4f}")
+    auc = roc_auc_score(y_test, y_proba, multi_class='ovr', average='weighted')
+    f1  = f1_score(y_test, y_pred, average='weighted')
+
+    print(f"\nFinal Test Accuracy:    {accuracy:.4f}")
+    print(f"AUC-ROC (weighted OvR): {auc:.3f}")
+    print(f"F1 Score (weighted):    {f1:.3f}")
     print(f"\nClassification Report:")
     print(classification_report(y_test, y_pred, target_names=target_names, labels=present_labels))
 
@@ -113,6 +119,8 @@ def train():
         "feature_cols": feature_cols,
         "risk_labels": risk_labels,
         "accuracy": accuracy,
+        "auc_roc": auc,
+        "f1_score": f1,
     }
 
     with open(model_path, "wb") as f:

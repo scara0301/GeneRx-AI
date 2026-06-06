@@ -29,7 +29,9 @@ class DrugRiskPredictor:
             self.feature_cols = artifacts["feature_cols"]
             self.risk_labels = artifacts.get("risk_labels", self.risk_labels)
             self.loaded = True
-            print(f"[ML] Model loaded (accuracy: {artifacts.get('accuracy', 'N/A')})")
+            print(f"[ML] Model loaded — accuracy: {artifacts.get('accuracy', 'N/A')}, "
+                  f"AUC-ROC: {artifacts.get('auc_roc', 'N/A')}, "
+                  f"F1: {artifacts.get('f1_score', 'N/A')}")
         except Exception as e:
             print(f"[ML] Failed to load model: {e}")
 
